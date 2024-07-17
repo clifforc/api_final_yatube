@@ -7,7 +7,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.filters import SearchFilter
 from rest_framework import viewsets, mixins
 
-from posts.models import Group, Post, Comment, Follow
+from posts.models import Group, Post, Comment
 from api.serializers import (
     GroupSerializer,
     PostSerializer,
@@ -32,7 +32,7 @@ class FollowViewSet(
     search_fields = ("following__username",)
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        return self.request.user.followers.all()
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
